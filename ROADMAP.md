@@ -19,11 +19,12 @@ a glance, how far along the phased build is.
 ## Progress
 
 ```
-Phases 0–13:   [███████░░░░░░░░░░░░░]  36%  (5 / 14 complete)
+Phases 0–13:   [█████████░░░░░░░░░░░]  43%  (6 / 14 complete)
 ```
 
 **MVP milestone (phases 0–4): complete ✅** — the shareable, Peregrine-aligned
-demonstration is done. Last shipped: **Phase 4 — Travel-Time Routing**.
+demonstration is done. Last shipped: **Phase 5 — Resource Allocation**
+(`/dispatch/recommendations` ranks units by routed ETA + availability + agency).
 
 **In progress (pulled forward, cross-cutting):** a responsive command center +
 installable PWA shell — the foundation for the Phase 6 First Responder PWA.
@@ -38,7 +39,7 @@ Full offline support is deferred / optional.
 | 2 | Operational Search                | `██████████` | 100% | ✅ |
 | 3 | PostGIS Geospatial Search         | `██████████` | 100% | ✅ |
 | 4 | Travel-Time Routing & Isochrones  | `██████████` | 100% | ✅ |
-| 5 | Resource Allocation               | `░░░░░░░░░░` |   0% | ⏭️ |
+| 5 | Resource Allocation               | `██████████` | 100% | ✅ |
 | 6 | First Responder PWA               | `██░░░░░░░░` |  20% | 🚧 |
 | 7 | Route Intelligence                | `░░░░░░░░░░` |   0% | ⬜ |
 | 8 | Real-Time Operations              | `░░░░░░░░░░` |   0% | ⬜ |
@@ -64,8 +65,8 @@ gantt
     P3 PostGIS Geospatial Search  :done, p3, after p2, 1d
     P4 Travel-Time Routing        :done, p4, after p3, 1d
     section Decision support
-    P5 Resource Allocation        :active, p5, after p4, 2d
-    P6 First Responder PWA        :p6, after p5, 2d
+    P5 Resource Allocation        :done, p5, after p4, 2d
+    P6 First Responder PWA        :active, p6, after p5, 2d
     P7 Route Intelligence         :p7, after p6, 2d
     section Live operations
     P8 Real-Time Operations       :p8, after p7, 2d
@@ -88,7 +89,7 @@ gantt
 | 2 | Operational Search | ✅ | `GET /search` grouped + ranked across entities · search panel · map fly-to |
 | 3 | PostGIS Geospatial Search | ✅ | PostGIS data layer · `ST_DWithin`/`ST_Distance` nearby endpoints · nearest-units panel · RDS-ready |
 | 4 | Travel-Time Routing & Isochrones | ✅ | Valhalla `/routing/route` + `/routing/isochrone` · polyline decoder · straight-line fallback · on-map routes + ETA |
-| 5 | Resource Allocation | ⏭️ | `/dispatch/recommendations` · allocation scoring (travel-time + availability + coverage impact) |
+| 5 | Resource Allocation | ✅ | `/dispatch/recommendations` · ranked units (routed ETA + availability + agency role) · recommended-dispatch panel · coverage summary |
 | 6 | First Responder PWA | ⬜ | `/responder` view · assignment card · route map · ETA · current location · installable PWA |
 | 7 | Route Intelligence | ⬜ | Multi-stop routing · alternatives · traffic-aware costing · reachability |
 | 8 | Real-Time Operations | ⬜ | WebSockets · live unit positions · incident + dispatch state updates |

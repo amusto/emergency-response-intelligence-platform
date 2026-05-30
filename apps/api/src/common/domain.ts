@@ -75,6 +75,27 @@ export interface IsochroneResult {
   geojson: unknown;
 }
 
+export type AgencyRole = 'primary' | 'support';
+
+/** A single ranked unit recommendation for dispatching to an incident. */
+export interface DispatchRecommendation {
+  resource: Resource;
+  etaSeconds: number;
+  distanceMeters: number;
+  routingEngine: RoutingEngine;
+  agencyRole: AgencyRole;
+  rationale: string;
+}
+
+/** Ranked dispatch recommendations for an incident, plus a coverage summary. */
+export interface DispatchRecommendations {
+  incidentId: string;
+  generatedAt: string;
+  recommendations: DispatchRecommendation[];
+  /** Available unit count by agency type — a lightweight coverage signal. */
+  availableByType: { type: ResourceType; available: number }[];
+}
+
 /** An entity annotated with its straight-line distance from a query point. */
 export type WithDistance<T> = T & { distanceMeters: number };
 export type NearbyFacility = WithDistance<Facility>;

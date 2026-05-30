@@ -1,4 +1,5 @@
 import type { RouteResult, SelectedEntity } from '../types';
+import RecommendedDispatch from './RecommendedDispatch';
 import NearbyForIncident from './NearbyForIncident';
 
 interface Props {
@@ -47,11 +48,12 @@ export default function DetailsPanel({ selected, onClear, onFocus, onRoute }: Pr
             value={new Date(selected.data.reportedAt).toLocaleString()}
           />
           <p className="detail-desc">{selected.data.description}</p>
-          <NearbyForIncident
+          <RecommendedDispatch
             incident={selected.data}
             onFocus={onFocus}
             onRoute={onRoute}
           />
+          <NearbyForIncident incident={selected.data} onFocus={onFocus} />
         </div>
       )}
 

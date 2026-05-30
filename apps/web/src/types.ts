@@ -59,6 +59,24 @@ export interface RouteResult {
   geometry: [number, number][];
 }
 
+export type AgencyRole = 'primary' | 'support';
+
+export interface DispatchRecommendation {
+  resource: Resource;
+  etaSeconds: number;
+  distanceMeters: number;
+  routingEngine: RoutingEngine;
+  agencyRole: AgencyRole;
+  rationale: string;
+}
+
+export interface DispatchRecommendations {
+  incidentId: string;
+  generatedAt: string;
+  recommendations: DispatchRecommendation[];
+  availableByType: { type: ResourceType; available: number }[];
+}
+
 export type WithDistance<T> = T & { distanceMeters: number };
 export type NearbyFacility = WithDistance<Facility>;
 export type NearbyResource = WithDistance<Resource>;

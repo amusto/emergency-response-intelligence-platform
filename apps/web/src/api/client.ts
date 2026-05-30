@@ -1,4 +1,5 @@
 import type {
+  DispatchRecommendations,
   Facility,
   Incident,
   NearbyFacility,
@@ -60,4 +61,8 @@ export const api = {
     if (costing) p.set('costing', costing);
     return getJson<RouteResult>(`/routing/route?${p.toString()}`);
   },
+  dispatchRecommendations: (incidentId: string, limit = 3) =>
+    getJson<DispatchRecommendations>(
+      `/dispatch/recommendations?incidentId=${encodeURIComponent(incidentId)}&limit=${limit}`,
+    ),
 };

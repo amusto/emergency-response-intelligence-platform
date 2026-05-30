@@ -6,8 +6,8 @@ search, travel-time analysis, routing, and emergency response workflows.
 This repository is built incrementally against the phased roadmap in
 [`ROADMAP.md`](./ROADMAP.md). The current implementation covers **Phase 0
 (Foundation)**, **Phase 1 (Operational Map MVP)**, **Phase 2 (Operational
-Search)**, **Phase 3 (PostGIS Geospatial Search)**, and **Phase 4 (Travel-Time
-Routing)**.
+Search)**, **Phase 3 (PostGIS Geospatial Search)**, **Phase 4 (Travel-Time
+Routing)**, and **Phase 5 (Resource Allocation)**.
 
 ## What's implemented
 
@@ -23,6 +23,10 @@ Routing)**.
 - **Travel-time routing** — `GET /routing/route` and `/routing/isochrone` call a
   Valhalla engine over OpenStreetMap. Routing degrades to a clearly-labeled
   straight-line estimate when Valhalla is unavailable, so the demo still works.
+- **Resource allocation** — `GET /dispatch/recommendations` ranks available,
+  agency-matched units for an incident by routed ETA (primary agency first),
+  with a rationale per unit and a coverage summary; surfaced as a
+  "Recommended dispatch" panel on the incident.
 - **Frontend** — React + TypeScript + Vite Command Center with a Leaflet map,
   layer filters, legend, search panel (map flies to results), an incident
   details panel listing nearest units/facilities, and on-map routing with an
@@ -54,6 +58,7 @@ Routing)**.
 │   │       ├── search/               SearchModule (cross-entity search)
 │   │       ├── geo/                  GeoModule (ST_DWithin / ST_Distance)
 │   │       ├── routing/              RoutingModule (Valhalla + polyline)
+│   │       ├── dispatch/             DispatchModule (allocation recommendations)
 │   │       └── health/               health check
 │   └── web/            React + Vite frontend
 │       └── src/
@@ -81,6 +86,7 @@ Routing)**.
 | GET    | `/api/geo/nearby-resources?lat=&lng=&radius=&limit=&type=` | Nearest units (optional EMS/Fire/Police) |
 | GET    | `/api/routing/route?fromLat=&fromLng=&toLat=&toLng=&costing=` | Route + travel time between two points |
 | GET    | `/api/routing/isochrone?lat=&lng=&contours=5,10,15&costing=` | Travel-time isochrone polygons (Valhalla) |
+| GET    | `/api/dispatch/recommendations?incidentId=&limit=` | Ranked unit recommendations for an incident |
 
 ## Running locally (without Docker)
 
