@@ -39,8 +39,16 @@ export default function CommandCenter() {
   const [selected, setSelected] = useState<SelectedEntity>(null);
   const [focus, setFocus] = useState<MapFocusTarget | null>(null);
   const [route, setRoute] = useState<RouteResult | null>(null);
+  // Mobile-only drawer state; ignored by the static desktop layout via CSS.
+  const [panelOpen, setPanelOpen] = useState(false);
 
   const selectedIncidentId = selected?.kind === 'incident' ? selected.data.id : null;
+
+  // From search: select + reveal the map (close the drawer on mobile).
+  const selectFromSearch = (entity: SelectedEntity) => {
+    focusEntity(entity);
+    setPanelOpen(false);
+  };
 
   // Select an entity and fly the map to it (used by search + marker clicks).
   const focusEntity = (entity: SelectedEntity) => {
@@ -100,6 +108,14 @@ export default function CommandCenter() {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand">
+          <button
+            className="panel-toggle"
+            aria-label="Toggle panel"
+            aria-expanded={panelOpen}
+            onClick={() => setPanelOpen((o) => !o)}
+          >
+            ☰
+          </button>
           <span className="brand-mark">ERIP</span>
           <span className="brand-sub">Command Center</span>
         </div>
@@ -120,8 +136,11 @@ export default function CommandCenter() {
       </header>
 
       <div className="layout">
-        <aside className="sidebar">
-          <SearchPanel onSelectResult={focusEntity} />
+        {panelOpen && (
+          <div className="backdrop" onClick={() => setPanelOpen(false)} />
+        )}
+        <aside className={`sidebar${panelOpen ? ' sidebar--open' : ''}`}>
+          <SearchPanel onSelectResult={selectFromSearch} />
           <LayerFilters
             visibleLayers={visibleLayers}
             counts={counts}

@@ -25,6 +25,10 @@ Phases 0–13:   [███████░░░░░░░░░░░░░] 
 **MVP milestone (phases 0–4): complete ✅** — the shareable, Peregrine-aligned
 demonstration is done. Last shipped: **Phase 4 — Travel-Time Routing**.
 
+**In progress (pulled forward, cross-cutting):** a responsive command center +
+installable PWA shell — the foundation for the Phase 6 First Responder PWA.
+Full offline support is deferred / optional.
+
 ### By phase
 
 | # | Phase | Progress | % | Status |
@@ -35,7 +39,7 @@ demonstration is done. Last shipped: **Phase 4 — Travel-Time Routing**.
 | 3 | PostGIS Geospatial Search         | `██████████` | 100% | ✅ |
 | 4 | Travel-Time Routing & Isochrones  | `██████████` | 100% | ✅ |
 | 5 | Resource Allocation               | `░░░░░░░░░░` |   0% | ⏭️ |
-| 6 | First Responder PWA               | `░░░░░░░░░░` |   0% | ⬜ |
+| 6 | First Responder PWA               | `██░░░░░░░░` |  20% | 🚧 |
 | 7 | Route Intelligence                | `░░░░░░░░░░` |   0% | ⬜ |
 | 8 | Real-Time Operations              | `░░░░░░░░░░` |   0% | ⬜ |
 | 9 | Coverage Analysis                 | `░░░░░░░░░░` |   0% | ⬜ |

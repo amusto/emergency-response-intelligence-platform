@@ -84,11 +84,29 @@ body {
   color: var(--text-dim);
 }
 
+/* Panel toggle (mobile only) */
+.panel-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+
 /* Layout */
 .layout {
   display: flex;
   flex: 1;
   min-height: 0;
+  position: relative;
+}
+
+.backdrop {
+  display: none;
 }
 
 .sidebar {
@@ -481,4 +499,104 @@ body {
 .leaflet-tooltip-left:before,
 .leaflet-tooltip-right:before {
   border-top-color: var(--border);
+}
+
+/* Update banner (PWA) */
+.update-banner {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+}
+
+.update-banner-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile / responsive — command center becomes a full-screen map with */
+/* a slide-in panel drawer. Desktop layout (>768px) is unchanged.      */
+/* ------------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .panel-toggle {
+    display: inline-flex;
+  }
+
+  .topbar {
+    padding: 0 12px;
+    height: 54px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .brand-mark {
+    font-size: 17px;
+  }
+
+  .stats {
+    gap: 14px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+  }
+
+  /* Map fills the viewport; the sidebar floats over it as a drawer. */
+  .sidebar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(86vw, 340px);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
+  }
+
+  .backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 900;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .route-banner {
+    left: 12px;
+    right: 12px;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .update-banner {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
 }
