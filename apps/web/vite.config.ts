@@ -8,9 +8,11 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      // We control activation via a "Reload to update" banner (see pwa.ts),
-      // mirroring the time-boxing app — no surprise auto-updates.
-      registerType: 'prompt',
+      // autoUpdate: a new build activates and reloads the page automatically.
+      // Chosen for a fast-moving WIP so rebuilds are always reflected without a
+      // manual clear or prompt. (Switch back to 'prompt' for controlled updates
+      // once real users are on it.)
+      registerType: 'autoUpdate',
       injectRegister: null,
       includeAssets: ['icons/apple-touch-icon.png', 'icons/favicon-48x48.png'],
       manifest: {

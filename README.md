@@ -31,6 +31,9 @@ Routing)**, and **Phase 5 (Resource Allocation)**.
   layer filters, legend, search panel (map flies to results), an incident
   details panel listing nearest units/facilities, and on-map routing with an
   ETA + distance banner.
+- **First Responder view (`/responder`)** — mobile-first view with a unit
+  selector, assignment card, route map + ETA to the assigned incident, and
+  current location (with optional device GPS).
 - **Responsive + installable (PWA, WIP)** — the command center adapts to mobile
   (full-screen map with a slide-in panel drawer), and the app is an installable
   PWA with app-shell precaching and a controlled "reload to update" banner. Full

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import type {
   Facility,
@@ -119,18 +120,23 @@ export default function CommandCenter() {
           <span className="brand-mark">ERIP</span>
           <span className="brand-sub">Command Center</span>
         </div>
-        <div className="stats">
-          <div className="stat">
-            <span className="stat-value">{activeP1}</span>
-            <span className="stat-label">Active P1</span>
-          </div>
-          <div className="stat">
-            <span className="stat-value">{availableUnits}</span>
-            <span className="stat-label">Units available</span>
-          </div>
-          <div className="stat">
-            <span className="stat-value">{facilities.length}</span>
-            <span className="stat-label">Facilities</span>
+        <div className="topbar-right">
+          <Link className="nav-link" to="/responder">
+            Responder →
+          </Link>
+          <div className="stats">
+            <div className="stat">
+              <span className="stat-value">{activeP1}</span>
+              <span className="stat-label">Active P1</span>
+            </div>
+            <div className="stat">
+              <span className="stat-value">{availableUnits}</span>
+              <span className="stat-label">Units available</span>
+            </div>
+            <div className="stat">
+              <span className="stat-value">{facilities.length}</span>
+              <span className="stat-label">Facilities</span>
+            </div>
           </div>
         </div>
       </header>

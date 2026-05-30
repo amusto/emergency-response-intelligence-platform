@@ -61,6 +61,26 @@ body {
   color: var(--text-dim);
 }
 
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  border-color: var(--accent);
+}
+
 .stats {
   display: flex;
   gap: 28px;
@@ -550,6 +570,125 @@ body {
   border-top-color: var(--border);
 }
 
+/* ------------------------------------------------------------------ */
+/* First Responder view (Phase 6) — mobile-first column layout        */
+/* ------------------------------------------------------------------ */
+.responder-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.responder-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.unit-select {
+  flex: 1;
+  min-width: 0;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.gps-btn {
+  flex-shrink: 0;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 7px 11px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gps-btn:hover {
+  border-color: var(--accent);
+}
+
+.responder-map {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+.assignment-sheet {
+  flex-shrink: 0;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  padding: 14px 16px;
+  max-height: 44vh;
+  overflow-y: auto;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.priority-pill {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0b0f17;
+  padding: 2px 9px;
+  border-radius: 10px;
+}
+
+.sheet-title {
+  font-size: 17px;
+  margin: 0;
+}
+
+.sheet-address {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 8px 0 0;
+}
+
+.sheet-desc {
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+.eta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.eta-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.eta-sub {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  margin-right: 10px;
+}
+
+.gps-error {
+  color: #fca5a5;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
 /* Update banner (PWA) */
 .update-banner {
   position: fixed;
@@ -598,8 +737,17 @@ body {
     font-size: 17px;
   }
 
+  .topbar-right {
+    gap: 10px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+    padding: 4px 7px;
+  }
+
   .stats {
-    gap: 14px;
+    gap: 12px;
   }
 
   .stat-value {
