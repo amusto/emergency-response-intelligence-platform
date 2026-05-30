@@ -55,3 +55,15 @@ export interface Incident {
   description: string;
   reportedAt: string;
 }
+
+/**
+ * Grouped, relevance-ranked search results across all operational entities.
+ * Each group is pre-sorted by descending relevance.
+ */
+export interface SearchResults {
+  query: string;
+  total: number;
+  incidents: Incident[];
+  resources: Resource[];
+  facilities: Facility[];
+}

@@ -1,5 +1,19 @@
-import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet';
-import type { Facility, Incident, LayerKey, Resource, SelectedEntity } from '../types';
+import { useEffect } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Tooltip,
+  useMap,
+} from 'react-leaflet';
+import type {
+  Facility,
+  Incident,
+  LayerKey,
+  MapFocusTarget,
+  Resource,
+  SelectedEntity,
+} from '../types';
 import {
   facilityOpacity,
   FACILITY_COLOR,
@@ -13,7 +27,21 @@ interface Props {
   facilities: Facility[];
   visibleLayers: Record<LayerKey, boolean>;
   selected: SelectedEntity;
+  focus: MapFocusTarget | null;
   onSelect: (entity: SelectedEntity) => void;
+}
+
+/** Imperatively flies the map whenever a new focus target arrives. */
+function MapFocus({ focus }: { focus: MapFocusTarget | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (focus) {
+      map.flyTo([focus.lat, focus.lng], Math.max(map.getZoom(), 15), {
+        duration: 0.6,
+      });
+    }
+  }, [focus, map]);
+  return null;
 }
 
 // San Francisco operating area.
@@ -30,6 +58,7 @@ export default function OperationalMap({
   facilities,
   visibleLayers,
   selected,
+  focus,
   onSelect,
 }: Props) {
   return (
@@ -38,6 +67,7 @@ export default function OperationalMap({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       />
+      <MapFocus focus={focus} />
 
       {visibleLayers.facilities &&
         facilities.map((f) => (

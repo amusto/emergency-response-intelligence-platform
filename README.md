@@ -5,19 +5,22 @@ search, travel-time analysis, routing, and emergency response workflows.
 
 This repository is built incrementally against the phased roadmap in
 [`ROADMAP.md`](./ROADMAP.md). The current implementation covers **Phase 0
-(Foundation)** and **Phase 1 (Operational Map MVP)**.
+(Foundation)**, **Phase 1 (Operational Map MVP)**, and
+**Phase 2 (Operational Search)**.
 
 ## What's implemented
 
 - **Monorepo** using npm workspaces (`apps/web`, `apps/api`).
-- **Backend** — NestJS REST API with `Facilities`, `Resources`, and `Incidents`
-  modules serving seeded data (San Francisco operating area).
+- **Backend** — NestJS REST API with `Facilities`, `Resources`, `Incidents`,
+  and `Search` modules serving seeded data (San Francisco operating area).
 - **Frontend** — React + TypeScript + Vite Command Center with a Leaflet map
-  rendering the three operational layers, layer filters, a legend, and a
-  details panel.
+  rendering the three operational layers, layer filters, a legend, a details
+  panel, and a search panel that flies the map to a selected result.
+- **Operational search** — `GET /search?q=` returns grouped, relevance-ranked
+  matches across incidents, resources, and facilities.
 - **Docker Compose** — `db` (PostgreSQL), `api`, and `web` services.
 
-> Phase 1 serves data from seeded JSON. PostGIS, Valhalla routing, the AI
+> Data is still served from seeded JSON. PostGIS, Valhalla routing, the AI
 > copilot, Kubernetes, and real-time simulation are intentionally **not** yet
 > implemented — see the roadmap.
 
@@ -33,6 +36,7 @@ This repository is built incrementally against the phased roadmap in
 │   │       ├── facilities/           FacilitiesModule
 │   │       ├── resources/            ResourcesModule
 │   │       ├── incidents/            IncidentsModule
+│   │       ├── search/               SearchModule (cross-entity search)
 │   │       └── health/               health check
 │   └── web/            React + Vite frontend
 │       └── src/
@@ -55,6 +59,7 @@ This repository is built incrementally against the phased roadmap in
 | GET    | `/api/resources/:id`  | Single resource        |
 | GET    | `/api/incidents`  | All incidents              |
 | GET    | `/api/incidents/:id`  | Single incident        |
+| GET    | `/api/search?q=`  | Grouped, ranked search across all entities |
 
 ## Running locally (without Docker)
 

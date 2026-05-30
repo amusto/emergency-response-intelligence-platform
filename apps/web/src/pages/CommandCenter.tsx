@@ -4,12 +4,14 @@ import type {
   Facility,
   Incident,
   LayerKey,
+  MapFocusTarget,
   Resource,
   SelectedEntity,
 } from '../types';
 import OperationalMap from '../components/OperationalMap';
 import LayerFilters from '../components/LayerFilters';
 import DetailsPanel from '../components/DetailsPanel';
+import SearchPanel from '../components/SearchPanel';
 
 export default function CommandCenter() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -24,6 +26,18 @@ export default function CommandCenter() {
     facilities: true,
   });
   const [selected, setSelected] = useState<SelectedEntity>(null);
+  const [focus, setFocus] = useState<MapFocusTarget | null>(null);
+
+  // Select an entity and fly the map to it (used by search + marker clicks).
+  const focusEntity = (entity: SelectedEntity) => {
+    setSelected(entity);
+    if (!entity) return;
+    const point =
+      entity.kind === 'incident'
+        ? { lat: entity.data.location.latitude, lng: entity.data.location.longitude }
+        : { lat: entity.data.latitude, lng: entity.data.longitude };
+    setFocus({ ...point, nonce: Date.now() });
+  };
 
   useEffect(() => {
     let active = true;
@@ -89,6 +103,7 @@ export default function CommandCenter() {
 
       <div className="layout">
         <aside className="sidebar">
+          <SearchPanel onSelectResult={focusEntity} />
           <LayerFilters
             visibleLayers={visibleLayers}
             counts={counts}
@@ -107,7 +122,8 @@ export default function CommandCenter() {
               facilities={facilities}
               visibleLayers={visibleLayers}
               selected={selected}
-              onSelect={setSelected}
+              focus={focus}
+              onSelect={focusEntity}
             />
           )}
         </main>

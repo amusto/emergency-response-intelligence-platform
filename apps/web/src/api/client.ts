@@ -1,4 +1,4 @@
-import type { Facility, Incident, Resource } from '../types';
+import type { Facility, Incident, Resource, SearchResults } from '../types';
 
 // Requests go to /api, which Vite proxies in dev and nginx proxies in Docker.
 const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
@@ -15,4 +15,6 @@ export const api = {
   getFacilities: () => getJson<Facility[]>('/facilities'),
   getResources: () => getJson<Resource[]>('/resources'),
   getIncidents: () => getJson<Incident[]>('/incidents'),
+  search: (q: string) =>
+    getJson<SearchResults>(`/search?q=${encodeURIComponent(q)}`),
 };

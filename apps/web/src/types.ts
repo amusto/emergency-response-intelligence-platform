@@ -49,7 +49,22 @@ export interface Incident {
   reportedAt: string;
 }
 
+export interface SearchResults {
+  query: string;
+  total: number;
+  incidents: Incident[];
+  resources: Resource[];
+  facilities: Facility[];
+}
+
 export type LayerKey = 'incidents' | 'resources' | 'facilities';
+
+/** A geographic point the map should fly to, with a nonce to retrigger. */
+export interface MapFocusTarget {
+  lat: number;
+  lng: number;
+  nonce: number;
+}
 
 export type SelectedEntity =
   | { kind: 'incident'; data: Incident }
