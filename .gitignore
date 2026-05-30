@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.node_modules_stale_delete_me/
+.pnp/
+.pnp.js
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Docker
+.docker/
+
+# Postgres volume (if mounted locally)
+pgdata/

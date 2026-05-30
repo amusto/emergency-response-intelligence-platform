@@ -1,0 +1,51 @@
+# Emergency Response Intelligence Platform — Phase 0/1 stack.
+#
+# Postgres is provisioned as part of the foundation, but Phase 1 services
+# data from seeded JSON. PostGIS-backed queries arrive in Phase 3.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: erip-db
+    environment:
+      POSTGRES_USER: erip
+      POSTGRES_PASSWORD: erip
+      POSTGRES_DB: erip
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U erip"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: erip-api
+    environment:
+      PORT: 3000
+      # Reserved for Phase 3 PostGIS work; unused while serving seed data.
+      DATABASE_URL: postgres://erip:erip@db:5432/erip
+      CORS_ORIGIN: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: erip-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
