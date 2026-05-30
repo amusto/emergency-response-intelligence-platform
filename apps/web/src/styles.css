@@ -304,6 +304,94 @@ body {
   color: var(--text-dim);
 }
 
+/* Route action + banner (Phase 4) */
+.result-row--split {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.result-row-main-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: var(--text);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.result-row-main-btn:hover {
+  border-color: var(--accent);
+}
+
+.route-btn {
+  flex-shrink: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 12px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.route-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.route-btn:disabled {
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.route-banner {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.route-engine {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.route-engine--valhalla {
+  background: rgba(56, 189, 248, 0.18);
+  color: var(--accent);
+}
+
+.route-engine--straight-line {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--text-dim);
+}
+
+.route-stat {
+  font-size: 14px;
+  font-weight: 600;
+}
+
 /* Nearby (Phase 3 proximity) */
 .nearby {
   margin-top: 12px;

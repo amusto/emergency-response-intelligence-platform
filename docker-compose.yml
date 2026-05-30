@@ -1,7 +1,8 @@
-# Emergency Response Intelligence Platform — Phase 0–3 stack.
+# Emergency Response Intelligence Platform — Phase 0–4 stack.
 #
-# The database runs PostGIS. The API bootstraps the schema and seeds the
-# tables on startup, then serves all entity and proximity queries from it.
+# db (PostGIS): the API bootstraps the schema and seeds it on startup.
+# valhalla:     travel-time routing/isochrone engine over OpenStreetMap.
+#               Routing degrades to a straight-line estimate if it is absent.
 
 services:
   db:
@@ -21,6 +22,24 @@ services:
       timeout: 5s
       retries: 5
 
+  # Valhalla routing engine. On first run it downloads the OSM extract named
+  # below and builds routing tiles into the named volume (this takes a while);
+  # subsequent starts reuse the tiles. Swap the URL for your region's extract.
+  valhalla:
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
+    container_name: erip-valhalla
+    ports:
+      - "8002:8002"
+    environment:
+      tile_urls: https://download.geofabrik.de/north-america/us/california/norcal-latest.osm.pbf
+      server_threads: 2
+      use_tiles_ignore_pbf: "True"
+      build_elevation: "False"
+      build_admins: "True"
+      build_time_zones: "False"
+    volumes:
+      - valhalla_tiles:/custom_files
+
   api:
     build:
       context: .
@@ -30,6 +49,7 @@ services:
       PORT: 3000
       DATABASE_URL: postgres://erip:erip@db:5432/erip
       CORS_ORIGIN: http://localhost:8080
+      VALHALLA_URL: http://valhalla:8002
     ports:
       - "3000:3000"
     depends_on:
@@ -48,3 +68,4 @@ services:
 
 volumes:
   pgdata:
+  valhalla_tiles:

@@ -6,28 +6,33 @@ search, travel-time analysis, routing, and emergency response workflows.
 This repository is built incrementally against the phased roadmap in
 [`ROADMAP.md`](./ROADMAP.md). The current implementation covers **Phase 0
 (Foundation)**, **Phase 1 (Operational Map MVP)**, **Phase 2 (Operational
-Search)**, and **Phase 3 (PostGIS Geospatial Search)**.
+Search)**, **Phase 3 (PostGIS Geospatial Search)**, and **Phase 4 (Travel-Time
+Routing)**.
 
 ## What's implemented
 
 - **Monorepo** using npm workspaces (`apps/web`, `apps/api`).
 - **Backend** — NestJS REST API with `Facilities`, `Resources`, `Incidents`,
-  `Search`, and `Geo` modules.
+  `Search`, `Geo`, and `Routing` modules.
 - **PostGIS data layer** — entities live in PostgreSQL with
   `geography(Point, 4326)` columns and GiST indexes. The API bootstraps the
   schema and seeds it from the canonical seed data on startup.
 - **Proximity search** — `GET /geo/nearby-facilities` and `nearby-resources`
   use `ST_DWithin` + `ST_Distance` to return the nearest entities with
   metre-accurate distances.
+- **Travel-time routing** — `GET /routing/route` and `/routing/isochrone` call a
+  Valhalla engine over OpenStreetMap. Routing degrades to a clearly-labeled
+  straight-line estimate when Valhalla is unavailable, so the demo still works.
 - **Frontend** — React + TypeScript + Vite Command Center with a Leaflet map,
-  layer filters, legend, search panel (map flies to results), and an incident
-  details panel that lists the nearest units and facilities by distance.
+  layer filters, legend, search panel (map flies to results), an incident
+  details panel listing nearest units/facilities, and on-map routing with an
+  ETA + distance banner.
 - **Operational search** — `GET /search?q=` returns grouped, relevance-ranked
   matches across incidents, resources, and facilities.
-- **Docker Compose** — `db` (PostGIS), `api`, and `web` services.
+- **Docker Compose** — `db` (PostGIS), `valhalla`, `api`, and `web` services.
 
-> Valhalla routing, the AI copilot, Kubernetes, and real-time simulation are
-> intentionally **not** yet implemented — see the roadmap.
+> The AI copilot, Kubernetes, and real-time simulation are intentionally **not**
+> yet implemented — see the roadmap.
 
 ## Project layout
 
@@ -44,6 +49,7 @@ Search)**, and **Phase 3 (PostGIS Geospatial Search)**.
 │   │       ├── incidents/            IncidentsModule
 │   │       ├── search/               SearchModule (cross-entity search)
 │   │       ├── geo/                  GeoModule (ST_DWithin / ST_Distance)
+│   │       ├── routing/              RoutingModule (Valhalla + polyline)
 │   │       └── health/               health check
 │   └── web/            React + Vite frontend
 │       └── src/
@@ -69,6 +75,8 @@ Search)**, and **Phase 3 (PostGIS Geospatial Search)**.
 | GET    | `/api/search?q=`  | Grouped, ranked search across all entities |
 | GET    | `/api/geo/nearby-facilities?lat=&lng=&radius=&limit=` | Nearest facilities by distance |
 | GET    | `/api/geo/nearby-resources?lat=&lng=&radius=&limit=&type=` | Nearest units (optional EMS/Fire/Police) |
+| GET    | `/api/routing/route?fromLat=&fromLng=&toLat=&toLng=&costing=` | Route + travel time between two points |
+| GET    | `/api/routing/isochrone?lat=&lng=&contours=5,10,15&costing=` | Travel-time isochrone polygons (Valhalla) |
 
 ## Running locally (without Docker)
 
@@ -110,6 +118,8 @@ The API is configured entirely through environment variables:
 | `DATABASE_SSL_REJECT_UNAUTHORIZED` | `true` | Set `false` only as a last resort if no CA is supplied |
 | `DB_BOOTSTRAP` | `true` | Run `CREATE EXTENSION`/tables on startup; set `false` if migrations are managed externally |
 | `DB_SEED` | `true` | Seed reference data when tables are empty; set `false` in production |
+| `VALHALLA_URL` | — | Base URL of the Valhalla engine; if unset, routing uses a straight-line estimate |
+| `VALHALLA_TIMEOUT_MS` | `4000` | Per-request timeout for Valhalla calls |
 | `PORT` | `3000` | API port |
 | `CORS_ORIGIN` | (all) | Comma-separated allowed origins |
 

@@ -3,6 +3,7 @@ import {
   MapContainer,
   TileLayer,
   CircleMarker,
+  Polyline,
   Tooltip,
   useMap,
 } from 'react-leaflet';
@@ -12,6 +13,7 @@ import type {
   LayerKey,
   MapFocusTarget,
   Resource,
+  RouteResult,
   SelectedEntity,
 } from '../types';
 import {
@@ -28,6 +30,7 @@ interface Props {
   visibleLayers: Record<LayerKey, boolean>;
   selected: SelectedEntity;
   focus: MapFocusTarget | null;
+  route: RouteResult | null;
   onSelect: (entity: SelectedEntity) => void;
 }
 
@@ -59,6 +62,7 @@ export default function OperationalMap({
   visibleLayers,
   selected,
   focus,
+  route,
   onSelect,
 }: Props) {
   return (
@@ -68,6 +72,18 @@ export default function OperationalMap({
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       />
       <MapFocus focus={focus} />
+
+      {route && (
+        <Polyline
+          positions={route.geometry}
+          pathOptions={{
+            color: route.engine === 'valhalla' ? '#38bdf8' : '#94a3b8',
+            weight: 4,
+            opacity: 0.9,
+            dashArray: route.engine === 'valhalla' ? undefined : '6 8',
+          }}
+        />
+      )}
 
       {visibleLayers.facilities &&
         facilities.map((f) => (

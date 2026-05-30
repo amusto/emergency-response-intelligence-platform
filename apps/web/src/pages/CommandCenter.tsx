@@ -6,12 +6,23 @@ import type {
   LayerKey,
   MapFocusTarget,
   Resource,
+  RouteResult,
   SelectedEntity,
 } from '../types';
 import OperationalMap from '../components/OperationalMap';
 import LayerFilters from '../components/LayerFilters';
 import DetailsPanel from '../components/DetailsPanel';
 import SearchPanel from '../components/SearchPanel';
+
+function fmtDuration(seconds: number): string {
+  const m = Math.round(seconds / 60);
+  if (m < 60) return `${m} min`;
+  return `${Math.floor(m / 60)}h ${m % 60}m`;
+}
+
+function fmtKm(meters: number): string {
+  return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${meters} m`;
+}
 
 export default function CommandCenter() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -27,9 +38,16 @@ export default function CommandCenter() {
   });
   const [selected, setSelected] = useState<SelectedEntity>(null);
   const [focus, setFocus] = useState<MapFocusTarget | null>(null);
+  const [route, setRoute] = useState<RouteResult | null>(null);
+
+  const selectedIncidentId = selected?.kind === 'incident' ? selected.data.id : null;
 
   // Select an entity and fly the map to it (used by search + marker clicks).
   const focusEntity = (entity: SelectedEntity) => {
+    // Switching to a different incident invalidates any drawn route.
+    if (entity?.kind === 'incident' && entity.data.id !== selectedIncidentId) {
+      setRoute(null);
+    }
     setSelected(entity);
     if (!entity) return;
     const point =
@@ -113,12 +131,32 @@ export default function CommandCenter() {
             selected={selected}
             onClear={() => setSelected(null)}
             onFocus={focusEntity}
+            onRoute={setRoute}
           />
         </aside>
 
         <main className="map-area">
           {loading && <div className="overlay">Loading operating picture…</div>}
           {error && <div className="overlay overlay-error">{error}</div>}
+          {route && (
+            <div className="route-banner">
+              <span
+                className={`route-engine route-engine--${route.engine}`}
+                title={
+                  route.engine === 'valhalla'
+                    ? 'Valhalla road-network route'
+                    : 'Straight-line estimate (Valhalla unavailable)'
+                }
+              >
+                {route.engine === 'valhalla' ? 'Valhalla' : 'Estimated'}
+              </span>
+              <span className="route-stat">{fmtDuration(route.durationSeconds)}</span>
+              <span className="route-stat">{fmtKm(route.distanceMeters)}</span>
+              <button className="clear-btn" onClick={() => setRoute(null)}>
+                Clear route
+              </button>
+            </div>
+          )}
           {!loading && !error && (
             <OperationalMap
               incidents={incidents}
@@ -127,6 +165,7 @@ export default function CommandCenter() {
               visibleLayers={visibleLayers}
               selected={selected}
               focus={focus}
+              route={route}
               onSelect={focusEntity}
             />
           )}

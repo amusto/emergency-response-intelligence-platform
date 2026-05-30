@@ -56,6 +56,25 @@ export interface Incident {
   reportedAt: string;
 }
 
+export type RoutingEngine = 'valhalla' | 'straight-line';
+
+/** A computed route between two points. Geometry is an ordered [lat, lng] path. */
+export interface RouteResult {
+  engine: RoutingEngine;
+  costing: string;
+  distanceMeters: number;
+  durationSeconds: number;
+  geometry: [number, number][];
+}
+
+/** Travel-time isochrone polygons (GeoJSON FeatureCollection from Valhalla). */
+export interface IsochroneResult {
+  engine: 'valhalla';
+  costing: string;
+  contourMinutes: number[];
+  geojson: unknown;
+}
+
 /** An entity annotated with its straight-line distance from a query point. */
 export type WithDistance<T> = T & { distanceMeters: number };
 export type NearbyFacility = WithDistance<Facility>;

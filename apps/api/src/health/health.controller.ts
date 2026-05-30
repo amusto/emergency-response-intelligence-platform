@@ -6,7 +6,7 @@ export class HealthController {
   check(): { status: string; phase: string; timestamp: string } {
     return {
       status: 'ok',
-      phase: 'Phase 3 — PostGIS Geospatial Search',
+      phase: 'Phase 4 — Travel-Time Routing (Valhalla)',
       timestamp: new Date().toISOString(),
     };
   }

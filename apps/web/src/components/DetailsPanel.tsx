@@ -1,10 +1,11 @@
-import type { SelectedEntity } from '../types';
+import type { RouteResult, SelectedEntity } from '../types';
 import NearbyForIncident from './NearbyForIncident';
 
 interface Props {
   selected: SelectedEntity;
   onClear: () => void;
   onFocus: (entity: SelectedEntity) => void;
+  onRoute: (result: RouteResult) => void;
 }
 
 function Row({ label, value }: { label: string; value: string | number }) {
@@ -16,7 +17,7 @@ function Row({ label, value }: { label: string; value: string | number }) {
   );
 }
 
-export default function DetailsPanel({ selected, onClear, onFocus }: Props) {
+export default function DetailsPanel({ selected, onClear, onFocus, onRoute }: Props) {
   if (!selected) {
     return (
       <section className="panel">
@@ -46,7 +47,11 @@ export default function DetailsPanel({ selected, onClear, onFocus }: Props) {
             value={new Date(selected.data.reportedAt).toLocaleString()}
           />
           <p className="detail-desc">{selected.data.description}</p>
-          <NearbyForIncident incident={selected.data} onFocus={onFocus} />
+          <NearbyForIncident
+            incident={selected.data}
+            onFocus={onFocus}
+            onRoute={onRoute}
+          />
         </div>
       )}
 

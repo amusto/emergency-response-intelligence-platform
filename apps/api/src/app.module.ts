@@ -5,6 +5,7 @@ import { ResourcesModule } from './resources/resources.module';
 import { IncidentsModule } from './incidents/incidents.module';
 import { SearchModule } from './search/search.module';
 import { GeoModule } from './geo/geo.module';
+import { RoutingModule } from './routing/routing.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -15,6 +16,7 @@ import { HealthController } from './health/health.controller';
     IncidentsModule,
     SearchModule,
     GeoModule,
+    RoutingModule,
   ],
   controllers: [HealthController],
 })

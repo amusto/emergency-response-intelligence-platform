@@ -4,6 +4,7 @@ import type {
   Incident,
   NearbyFacility,
   NearbyResource,
+  RouteResult,
   SelectedEntity,
 } from '../types';
 import { FACILITY_COLOR, resourceColor } from '../lib/style';
@@ -11,6 +12,7 @@ import { FACILITY_COLOR, resourceColor } from '../lib/style';
 interface Props {
   incident: Incident;
   onFocus: (entity: SelectedEntity) => void;
+  onRoute: (result: RouteResult) => void;
 }
 
 function fmtDistance(meters: number): string {
@@ -21,11 +23,23 @@ function fmtDistance(meters: number): string {
  * For a selected incident, shows the nearest responder units and care
  * facilities by PostGIS distance. This is the visible payoff of Phase 3.
  */
-export default function NearbyForIncident({ incident, onFocus }: Props) {
+export default function NearbyForIncident({ incident, onFocus, onRoute }: Props) {
   const [resources, setResources] = useState<NearbyResource[]>([]);
   const [facilities, setFacilities] = useState<NearbyFacility[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [routingId, setRoutingId] = useState<string | null>(null);
+
+  const routeFrom = (r: NearbyResource) => {
+    setRoutingId(r.id);
+    api
+      .route(
+        { lat: r.latitude, lng: r.longitude },
+        { lat: incident.location.latitude, lng: incident.location.longitude },
+      )
+      .then(onRoute)
+      .finally(() => setRoutingId(null));
+  };
 
   useEffect(() => {
     let active = true;
@@ -57,17 +71,25 @@ export default function NearbyForIncident({ incident, onFocus }: Props) {
         <span className="result-group-title">Nearest units</span>
         {resources.length === 0 && <p className="empty-hint">None in range.</p>}
         {resources.map((r) => (
-          <button
-            key={r.id}
-            className="result-row"
-            onClick={() => onFocus({ kind: 'resource', data: r })}
-          >
-            <span className="dot" style={{ background: resourceColor(r) }} />
-            <span className="result-main">
-              {r.unitNumber} <span className="result-sub">({r.type})</span>
-            </span>
-            <span className="result-sub">{fmtDistance(r.distanceMeters)}</span>
-          </button>
+          <div key={r.id} className="result-row result-row--split">
+            <button
+              className="result-row-main-btn"
+              onClick={() => onFocus({ kind: 'resource', data: r })}
+            >
+              <span className="dot" style={{ background: resourceColor(r) }} />
+              <span className="result-main">
+                {r.unitNumber} <span className="result-sub">({r.type})</span>
+              </span>
+              <span className="result-sub">{fmtDistance(r.distanceMeters)}</span>
+            </button>
+            <button
+              className="route-btn"
+              disabled={routingId === r.id}
+              onClick={() => routeFrom(r)}
+            >
+              {routingId === r.id ? '…' : 'Route'}
+            </button>
+          </div>
         ))}
       </div>
 

@@ -4,6 +4,7 @@ import type {
   NearbyFacility,
   NearbyResource,
   Resource,
+  RouteResult,
   SearchResults,
 } from '../types';
 
@@ -44,5 +45,19 @@ export const api = {
     if (opts.radius) p.set('radius', String(opts.radius));
     if (opts.limit) p.set('limit', String(opts.limit));
     return getJson<NearbyFacility[]>(`/geo/nearby-facilities?${p.toString()}`);
+  },
+  route: (
+    from: { lat: number; lng: number },
+    to: { lat: number; lng: number },
+    costing?: string,
+  ) => {
+    const p = new URLSearchParams({
+      fromLat: String(from.lat),
+      fromLng: String(from.lng),
+      toLat: String(to.lat),
+      toLng: String(to.lng),
+    });
+    if (costing) p.set('costing', costing);
+    return getJson<RouteResult>(`/routing/route?${p.toString()}`);
   },
 };

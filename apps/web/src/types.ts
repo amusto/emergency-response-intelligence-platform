@@ -49,6 +49,16 @@ export interface Incident {
   reportedAt: string;
 }
 
+export type RoutingEngine = 'valhalla' | 'straight-line';
+
+export interface RouteResult {
+  engine: RoutingEngine;
+  costing: string;
+  distanceMeters: number;
+  durationSeconds: number;
+  geometry: [number, number][];
+}
+
 export type WithDistance<T> = T & { distanceMeters: number };
 export type NearbyFacility = WithDistance<Facility>;
 export type NearbyResource = WithDistance<Resource>;
