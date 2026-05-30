@@ -27,6 +27,10 @@ Routing)**.
   layer filters, legend, search panel (map flies to results), an incident
   details panel listing nearest units/facilities, and on-map routing with an
   ETA + distance banner.
+- **Responsive + installable (PWA, WIP)** — the command center adapts to mobile
+  (full-screen map with a slide-in panel drawer), and the app is an installable
+  PWA with app-shell precaching and a controlled "reload to update" banner. Full
+  offline (API + map-tile caching, background sync) is intentionally deferred.
 - **Operational search** — `GET /search?q=` returns grouped, relevance-ranked
   matches across incidents, resources, and facilities.
 - **Docker Compose** — `db` (PostGIS), `valhalla`, `api`, and `web` services.
@@ -97,6 +101,17 @@ bootstraps the PostGIS schema, and seeds it on first start. The Vite dev server
 proxies `/api` to the backend, so open http://localhost:5173/command.
 
 ## Running with Docker Compose
+
+Quickest path — a `Makefile` wraps the common commands (`make help` lists them):
+
+```bash
+make demo        # build + run the shareable stack (db + api + web), no Valhalla
+make demo-full   # full stack incl. Valhalla (slow first-run tile build)
+make dev-db      # just PostGIS, for local `npm run dev:api` / `dev:web`
+make down        # stop (keeps data)   |   make clean  # stop + wipe volumes
+```
+
+Or call Compose directly:
 
 ```bash
 docker compose up --build
