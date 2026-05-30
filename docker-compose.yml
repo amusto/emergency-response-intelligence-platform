@@ -1,11 +1,11 @@
-# Emergency Response Intelligence Platform — Phase 0/1 stack.
+# Emergency Response Intelligence Platform — Phase 0–3 stack.
 #
-# Postgres is provisioned as part of the foundation, but Phase 1 services
-# data from seeded JSON. PostGIS-backed queries arrive in Phase 3.
+# The database runs PostGIS. The API bootstraps the schema and seeds the
+# tables on startup, then serves all entity and proximity queries from it.
 
 services:
   db:
-    image: postgres:16-alpine
+    image: postgis/postgis:16-3.4
     container_name: erip-db
     environment:
       POSTGRES_USER: erip
@@ -28,7 +28,6 @@ services:
     container_name: erip-api
     environment:
       PORT: 3000
-      # Reserved for Phase 3 PostGIS work; unused while serving seed data.
       DATABASE_URL: postgres://erip:erip@db:5432/erip
       CORS_ORIGIN: http://localhost:8080
     ports:

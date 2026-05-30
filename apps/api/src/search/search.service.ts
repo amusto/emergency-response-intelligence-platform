@@ -39,15 +39,20 @@ export class SearchService {
     return score;
   }
 
-  search(rawQuery: string): SearchResults {
+  async search(rawQuery: string): Promise<SearchResults> {
     const query = rawQuery.trim().toLowerCase();
 
     if (!query) {
       return { query: rawQuery, total: 0, incidents: [], resources: [], facilities: [] };
     }
 
-    const incidents = this.incidents
-      .findAll()
+    const [allIncidents, allResources, allFacilities] = await Promise.all([
+      this.incidents.findAll(),
+      this.resources.findAll(),
+      this.facilities.findAll(),
+    ]);
+
+    const incidents = allIncidents
       .map((i) => ({
         item: i,
         score: this.score(query, [
@@ -63,8 +68,7 @@ export class SearchService {
       .sort((a, b) => b.score - a.score)
       .map((r) => r.item);
 
-    const resources = this.resources
-      .findAll()
+    const resources = allResources
       .map((r) => ({
         item: r,
         score: this.score(query, [
@@ -78,8 +82,7 @@ export class SearchService {
       .sort((a, b) => b.score - a.score)
       .map((r) => r.item);
 
-    const facilities = this.facilities
-      .findAll()
+    const facilities = allFacilities
       .map((f) => ({
         item: f,
         score: this.score(query, [

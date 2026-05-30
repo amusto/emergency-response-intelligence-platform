@@ -1,8 +1,10 @@
 import type { SelectedEntity } from '../types';
+import NearbyForIncident from './NearbyForIncident';
 
 interface Props {
   selected: SelectedEntity;
   onClear: () => void;
+  onFocus: (entity: SelectedEntity) => void;
 }
 
 function Row({ label, value }: { label: string; value: string | number }) {
@@ -14,7 +16,7 @@ function Row({ label, value }: { label: string; value: string | number }) {
   );
 }
 
-export default function DetailsPanel({ selected, onClear }: Props) {
+export default function DetailsPanel({ selected, onClear, onFocus }: Props) {
   if (!selected) {
     return (
       <section className="panel">
@@ -44,6 +46,7 @@ export default function DetailsPanel({ selected, onClear }: Props) {
             value={new Date(selected.data.reportedAt).toLocaleString()}
           />
           <p className="detail-desc">{selected.data.description}</p>
+          <NearbyForIncident incident={selected.data} onFocus={onFocus} />
         </div>
       )}
 

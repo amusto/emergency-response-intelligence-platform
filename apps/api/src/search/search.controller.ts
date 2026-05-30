@@ -7,7 +7,7 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  search(@Query('q') q = ''): SearchResults {
+  search(@Query('q') q = ''): Promise<SearchResults> {
     return this.searchService.search(q);
   }
 }

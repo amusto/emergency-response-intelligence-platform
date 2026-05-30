@@ -49,6 +49,10 @@ export interface Incident {
   reportedAt: string;
 }
 
+export type WithDistance<T> = T & { distanceMeters: number };
+export type NearbyFacility = WithDistance<Facility>;
+export type NearbyResource = WithDistance<Resource>;
+
 export interface SearchResults {
   query: string;
   total: number;

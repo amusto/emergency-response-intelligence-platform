@@ -1,20 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Facility } from '../common/domain';
-import { FACILITIES } from '../seed/facilities.seed';
+import { DatabaseService } from '../database/database.service';
+import { FACILITY_COLUMNS, FacilityRow, mapFacility } from '../common/sql';
 
 @Injectable()
 export class FacilitiesService {
-  private readonly facilities: Facility[] = FACILITIES;
+  constructor(private readonly db: DatabaseService) {}
 
-  findAll(): Facility[] {
-    return this.facilities;
+  async findAll(): Promise<Facility[]> {
+    const { rows } = await this.db.query<FacilityRow>(
+      `SELECT ${FACILITY_COLUMNS} FROM facilities ORDER BY name`,
+    );
+    return rows.map(mapFacility);
   }
 
-  findOne(id: string): Facility {
-    const facility = this.facilities.find((f) => f.id === id);
-    if (!facility) {
+  async findOne(id: string): Promise<Facility> {
+    const { rows } = await this.db.query<FacilityRow>(
+      `SELECT ${FACILITY_COLUMNS} FROM facilities WHERE id = $1`,
+      [id],
+    );
+    if (rows.length === 0) {
       throw new NotFoundException(`Facility ${id} not found`);
     }
-    return facility;
+    return mapFacility(rows[0]);
   }
 }

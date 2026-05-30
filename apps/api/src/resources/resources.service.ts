@@ -1,20 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Resource } from '../common/domain';
-import { RESOURCES } from '../seed/resources.seed';
+import { DatabaseService } from '../database/database.service';
+import { RESOURCE_COLUMNS, ResourceRow, mapResource } from '../common/sql';
 
 @Injectable()
 export class ResourcesService {
-  private readonly resources: Resource[] = RESOURCES;
+  constructor(private readonly db: DatabaseService) {}
 
-  findAll(): Resource[] {
-    return this.resources;
+  async findAll(): Promise<Resource[]> {
+    const { rows } = await this.db.query<ResourceRow>(
+      `SELECT ${RESOURCE_COLUMNS} FROM resources ORDER BY unit_number`,
+    );
+    return rows.map(mapResource);
   }
 
-  findOne(id: string): Resource {
-    const resource = this.resources.find((r) => r.id === id);
-    if (!resource) {
+  async findOne(id: string): Promise<Resource> {
+    const { rows } = await this.db.query<ResourceRow>(
+      `SELECT ${RESOURCE_COLUMNS} FROM resources WHERE id = $1`,
+      [id],
+    );
+    if (rows.length === 0) {
       throw new NotFoundException(`Resource ${id} not found`);
     }
-    return resource;
+    return mapResource(rows[0]);
   }
 }

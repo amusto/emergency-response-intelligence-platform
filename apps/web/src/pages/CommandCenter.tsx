@@ -109,7 +109,11 @@ export default function CommandCenter() {
             counts={counts}
             onToggle={toggleLayer}
           />
-          <DetailsPanel selected={selected} onClear={() => setSelected(null)} />
+          <DetailsPanel
+            selected={selected}
+            onClear={() => setSelected(null)}
+            onFocus={focusEntity}
+          />
         </aside>
 
         <main className="map-area">

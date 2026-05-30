@@ -7,12 +7,12 @@ export class IncidentsController {
   constructor(private readonly incidentsService: IncidentsService) {}
 
   @Get()
-  findAll(): Incident[] {
+  findAll(): Promise<Incident[]> {
     return this.incidentsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Incident {
+  findOne(@Param('id') id: string): Promise<Incident> {
     return this.incidentsService.findOne(id);
   }
 }

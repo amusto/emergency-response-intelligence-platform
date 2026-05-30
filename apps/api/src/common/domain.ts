@@ -56,6 +56,11 @@ export interface Incident {
   reportedAt: string;
 }
 
+/** An entity annotated with its straight-line distance from a query point. */
+export type WithDistance<T> = T & { distanceMeters: number };
+export type NearbyFacility = WithDistance<Facility>;
+export type NearbyResource = WithDistance<Resource>;
+
 /**
  * Grouped, relevance-ranked search results across all operational entities.
  * Each group is pre-sorted by descending relevance.

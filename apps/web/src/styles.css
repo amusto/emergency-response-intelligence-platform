@@ -304,6 +304,22 @@ body {
   color: var(--text-dim);
 }
 
+/* Nearby (Phase 3 proximity) */
+.nearby {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.nearby-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
 /* Details */
 .detail-body {
   display: flex;
