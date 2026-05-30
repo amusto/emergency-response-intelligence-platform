@@ -26,10 +26,13 @@ Phases 0–13:   [█████████░░░░░░░░░░░] 
 demonstration is done. Last shipped: **Phase 5 — Resource Allocation**
 (`/dispatch/recommendations` ranks units by routed ETA + availability + agency).
 
-**In progress:** Phase 6 — First Responder PWA. The `/responder` mobile view
-(unit selector, assignment card, route map, ETA, current location w/ optional
-GPS), responsive command center, and installable PWA shell are done. Full
-offline support (background sync, map-tile caching) is deferred / optional.
+**In progress:**
+
+- **Phase 6 — First Responder PWA** (80%): `/responder` view + responsive
+  command center + installable PWA shell done; full offline deferred / optional.
+- **Phase 7 — Route Intelligence** (50%): travel-time reachability
+  (`/routing/reachable`) and alternate-route support done; multi-stop and
+  traffic-aware costing queued.
 
 ### By phase
 
@@ -42,7 +45,7 @@ offline support (background sync, map-tile caching) is deferred / optional.
 | 4 | Travel-Time Routing & Isochrones  | `██████████` | 100% | ✅ |
 | 5 | Resource Allocation               | `██████████` | 100% | ✅ |
 | 6 | First Responder PWA               | `████████░░` |  80% | 🚧 |
-| 7 | Route Intelligence                | `░░░░░░░░░░` |   0% | ⬜ |
+| 7 | Route Intelligence                | `█████░░░░░` |  50% | 🚧 |
 | 8 | Real-Time Operations              | `░░░░░░░░░░` |   0% | ⬜ |
 | 9 | Coverage Analysis                 | `░░░░░░░░░░` |   0% | ⬜ |
 | 10 | Traffic Simulation               | `░░░░░░░░░░` |   0% | ⬜ |
@@ -68,7 +71,7 @@ gantt
     section Decision support
     P5 Resource Allocation        :done, p5, after p4, 2d
     P6 First Responder PWA        :active, p6, after p5, 2d
-    P7 Route Intelligence         :p7, after p6, 2d
+    P7 Route Intelligence         :active, p7, after p6, 2d
     section Live operations
     P8 Real-Time Operations       :p8, after p7, 2d
     P9 Coverage Analysis          :p9, after p8, 2d
@@ -92,7 +95,7 @@ gantt
 | 4 | Travel-Time Routing & Isochrones | ✅ | Valhalla `/routing/route` + `/routing/isochrone` · polyline decoder · straight-line fallback · on-map routes + ETA |
 | 5 | Resource Allocation | ✅ | `/dispatch/recommendations` · ranked units (routed ETA + availability + agency role) · recommended-dispatch panel · coverage summary |
 | 6 | First Responder PWA | 🚧 | ✅ `/responder` view · ✅ assignment card · ✅ route map + ETA · ✅ current location (opt. GPS) · ✅ installable PWA shell · ⬜ full offline (deferred) |
-| 7 | Route Intelligence | ⬜ | Multi-stop routing · alternatives · traffic-aware costing · reachability |
+| 7 | Route Intelligence | 🚧 | ✅ travel-time reachability (`/routing/reachable`) · ✅ alternate routes · ⬜ multi-stop · ⬜ traffic-aware costing |
 | 8 | Real-Time Operations | ⬜ | WebSockets · live unit positions · incident + dispatch state updates |
 | 9 | Coverage Analysis | ⬜ | Isochrone-based coverage maps · gap detection · demand vs. coverage |
 | 10 | Traffic Simulation | ⬜ | `/simulation/tick` + `/reset` · moving units · scenario playback |

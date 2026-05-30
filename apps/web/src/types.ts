@@ -57,6 +57,17 @@ export interface RouteResult {
   distanceMeters: number;
   durationSeconds: number;
   geometry: [number, number][];
+  alternatives?: RouteResult[];
+}
+
+export type Reachable<T> = T & { etaSeconds: number; distanceMeters: number };
+
+export interface ReachabilityResult {
+  kind: 'facilities' | 'resources';
+  minutes: number;
+  origin: { lat: number; lng: number };
+  engine: RoutingEngine;
+  items: Reachable<Facility>[] | Reachable<Resource>[];
 }
 
 export type AgencyRole = 'primary' | 'support';

@@ -7,7 +7,8 @@ This repository is built incrementally against the phased roadmap in
 [`ROADMAP.md`](./ROADMAP.md). The current implementation covers **Phase 0
 (Foundation)**, **Phase 1 (Operational Map MVP)**, **Phase 2 (Operational
 Search)**, **Phase 3 (PostGIS Geospatial Search)**, **Phase 4 (Travel-Time
-Routing)**, and **Phase 5 (Resource Allocation)**.
+Routing)**, and **Phase 5 (Resource Allocation)**, with **Phase 6 (First
+Responder PWA)** and **Phase 7 (Route Intelligence)** in progress.
 
 ## What's implemented
 
@@ -27,6 +28,11 @@ Routing)**, and **Phase 5 (Resource Allocation)**.
   agency-matched units for an incident by routed ETA (primary agency first),
   with a rationale per unit and a coverage summary; surfaced as a
   "Recommended dispatch" panel on the incident.
+- **Route intelligence (WIP)** — `GET /routing/reachable` returns facilities (or
+  units) reachable within a travel-time budget, sorted by ETA; surfaced as a
+  "Reachable facilities" panel with a 5/10/15-minute selector. `/routing/route`
+  also accepts `alternates` for alternate routes. (Multi-stop and traffic-aware
+  costing are queued.)
 - **Frontend** — React + TypeScript + Vite Command Center with a Leaflet map,
   layer filters, legend, search panel (map flies to results), an incident
   details panel listing nearest units/facilities, and on-map routing with an
@@ -89,6 +95,7 @@ Routing)**, and **Phase 5 (Resource Allocation)**.
 | GET    | `/api/geo/nearby-resources?lat=&lng=&radius=&limit=&type=` | Nearest units (optional EMS/Fire/Police) |
 | GET    | `/api/routing/route?fromLat=&fromLng=&toLat=&toLng=&costing=` | Route + travel time between two points |
 | GET    | `/api/routing/isochrone?lat=&lng=&contours=5,10,15&costing=` | Travel-time isochrone polygons (Valhalla) |
+| GET    | `/api/routing/reachable?lat=&lng=&minutes=&kind=&limit=` | Facilities/units reachable within a time budget |
 | GET    | `/api/dispatch/recommendations?incidentId=&limit=` | Ranked unit recommendations for an incident |
 
 ## Running locally (without Docker)

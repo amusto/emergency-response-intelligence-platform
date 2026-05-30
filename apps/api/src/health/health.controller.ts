@@ -6,7 +6,7 @@ export class HealthController {
   check(): { status: string; phase: string; timestamp: string } {
     return {
       status: 'ok',
-      phase: 'Phase 5 — Resource Allocation',
+      phase: 'Phase 7 — Route Intelligence',
       timestamp: new Date().toISOString(),
     };
   }

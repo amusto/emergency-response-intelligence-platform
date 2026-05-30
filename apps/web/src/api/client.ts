@@ -4,6 +4,7 @@ import type {
   Incident,
   NearbyFacility,
   NearbyResource,
+  ReachabilityResult,
   Resource,
   RouteResult,
   SearchResults,
@@ -65,4 +66,13 @@ export const api = {
     getJson<DispatchRecommendations>(
       `/dispatch/recommendations?incidentId=${encodeURIComponent(incidentId)}&limit=${limit}`,
     ),
+  reachableFacilities: (lat: number, lng: number, minutes: number) => {
+    const p = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+      minutes: String(minutes),
+      kind: 'facilities',
+    });
+    return getJson<ReachabilityResult>(`/routing/reachable?${p.toString()}`);
+  },
 };

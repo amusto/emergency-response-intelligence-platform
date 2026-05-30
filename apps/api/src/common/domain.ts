@@ -65,6 +65,20 @@ export interface RouteResult {
   distanceMeters: number;
   durationSeconds: number;
   geometry: [number, number][];
+  /** Alternate routes, when requested and the engine returns them. */
+  alternatives?: RouteResult[];
+}
+
+/** An entity annotated with the routed time/distance from a query origin. */
+export type Reachable<T> = T & { etaSeconds: number; distanceMeters: number };
+
+/** Entities reachable from an origin within a travel-time budget. */
+export interface ReachabilityResult {
+  kind: 'facilities' | 'resources';
+  minutes: number;
+  origin: { lat: number; lng: number };
+  engine: RoutingEngine;
+  items: Reachable<Facility>[] | Reachable<Resource>[];
 }
 
 /** Travel-time isochrone polygons (GeoJSON FeatureCollection from Valhalla). */

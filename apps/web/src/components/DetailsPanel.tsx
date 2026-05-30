@@ -1,6 +1,6 @@
 import type { RouteResult, SelectedEntity } from '../types';
 import RecommendedDispatch from './RecommendedDispatch';
-import NearbyForIncident from './NearbyForIncident';
+import ReachableFacilities from './ReachableFacilities';
 
 interface Props {
   selected: SelectedEntity;
@@ -53,7 +53,7 @@ export default function DetailsPanel({ selected, onClear, onFocus, onRoute }: Pr
             onFocus={onFocus}
             onRoute={onRoute}
           />
-          <NearbyForIncident incident={selected.data} onFocus={onFocus} />
+          <ReachableFacilities incident={selected.data} onFocus={onFocus} />
         </div>
       )}
 

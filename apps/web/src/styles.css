@@ -479,6 +479,35 @@ body {
   color: var(--text-dim);
 }
 
+/* Reachability (Phase 7) */
+.reach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.reach-toggle {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.reach-opt {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  font-size: 11px;
+  padding: 2px 7px;
+  cursor: pointer;
+}
+
+.reach-opt--on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* Nearby (Phase 3 proximity) */
 .nearby {
   margin-top: 12px;

@@ -34,10 +34,11 @@ export class RoutingService {
     from: RoutePoint,
     to: RoutePoint,
     costing = 'auto',
+    alternates = 0,
   ): Promise<RouteResult> {
     if (this.valhallaUrl) {
       try {
-        return await this.valhallaRoute(from, to, costing);
+        return await this.valhallaRoute(from, to, costing, alternates);
       } catch (err) {
         this.logger.warn(
           `Valhalla route failed (${(err as Error).message}); using straight-line fallback`,
@@ -72,8 +73,9 @@ export class RoutingService {
     from: RoutePoint,
     to: RoutePoint,
     costing: string,
+    alternates: number,
   ): Promise<RouteResult> {
-    const body = {
+    const body: Record<string, unknown> = {
       locations: [
         { lat: from.lat, lon: from.lng },
         { lat: to.lat, lon: to.lng },
@@ -81,8 +83,20 @@ export class RoutingService {
       costing,
       directions_options: { units: 'kilometers' },
     };
+    if (alternates > 0) {
+      body.alternates = alternates;
+    }
     const data = (await this.post('/route', body)) as ValhallaRouteResponse;
-    const trip = data.trip;
+    const result = this.mapTrip(data.trip, costing);
+    if (data.alternates?.length) {
+      result.alternatives = data.alternates.map((a) =>
+        this.mapTrip(a.trip, costing),
+      );
+    }
+    return result;
+  }
+
+  private mapTrip(trip: ValhallaTrip, costing: string): RouteResult {
     const geometry: [number, number][] = [];
     for (const leg of trip.legs) {
       geometry.push(...decodePolyline(leg.shape, 6));
@@ -135,11 +149,14 @@ export class RoutingService {
   }
 }
 
+interface ValhallaTrip {
+  summary: { length: number; time: number };
+  legs: { shape: string }[];
+}
+
 interface ValhallaRouteResponse {
-  trip: {
-    summary: { length: number; time: number };
-    legs: { shape: string }[];
-  };
+  trip: ValhallaTrip;
+  alternates?: { trip: ValhallaTrip }[];
 }
 
 function haversineMeters(a: RoutePoint, b: RoutePoint): number {

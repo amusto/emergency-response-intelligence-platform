@@ -1,12 +1,16 @@
 import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
-import { IsochroneResult, RouteResult } from '../common/domain';
+import { IsochroneResult, ReachabilityResult, RouteResult } from '../common/domain';
 import { RoutingService } from './routing.service';
+import { ReachabilityService, ReachableKind } from './reachability.service';
 
 const COSTING = ['auto', 'truck', 'bicycle', 'pedestrian'];
 
 @Controller('routing')
 export class RoutingController {
-  constructor(private readonly routingService: RoutingService) {}
+  constructor(
+    private readonly routingService: RoutingService,
+    private readonly reachabilityService: ReachabilityService,
+  ) {}
 
   @Get('route')
   route(
@@ -15,10 +19,15 @@ export class RoutingController {
     @Query('toLat') toLat: string,
     @Query('toLng') toLng: string,
     @Query('costing') costing?: string,
+    @Query('alternates') alternates?: string,
   ): Promise<RouteResult> {
     const from = this.point(fromLat, fromLng, 'from');
     const to = this.point(toLat, toLng, 'to');
-    return this.routingService.route(from, to, this.costing(costing));
+    const alt = alternates !== undefined ? Number(alternates) : 0;
+    if (!Number.isInteger(alt) || alt < 0 || alt > 3) {
+      throw new BadRequestException('alternates must be an integer 0–3');
+    }
+    return this.routingService.route(from, to, this.costing(costing), alt);
   }
 
   @Get('isochrone')
@@ -31,6 +40,35 @@ export class RoutingController {
     const center = this.point(lat, lng, 'center');
     const minutes = this.parseContours(contours);
     return this.routingService.isochrone(center, minutes, this.costing(costing));
+  }
+
+  @Get('reachable')
+  reachable(
+    @Query('lat') lat: string,
+    @Query('lng') lng: string,
+    @Query('minutes') minutes?: string,
+    @Query('kind') kind?: string,
+    @Query('limit') limit?: string,
+  ): Promise<ReachabilityResult> {
+    const origin = this.point(lat, lng, 'origin');
+    const mins = minutes !== undefined ? Number(minutes) : 15;
+    if (!Number.isFinite(mins) || mins <= 0 || mins > 120) {
+      throw new BadRequestException('minutes must be a number between 1 and 120');
+    }
+    if (kind && kind !== 'facilities' && kind !== 'resources') {
+      throw new BadRequestException("kind must be 'facilities' or 'resources'");
+    }
+    const lim = limit !== undefined ? Number(limit) : 20;
+    if (!Number.isInteger(lim) || lim <= 0 || lim > 100) {
+      throw new BadRequestException('limit must be an integer between 1 and 100');
+    }
+    return this.reachabilityService.reachable(
+      (kind as ReachableKind) ?? 'facilities',
+      origin.lat,
+      origin.lng,
+      mins,
+      lim,
+    );
   }
 
   private point(lat: string, lng: string, label: string) {
